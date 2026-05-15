@@ -1,0 +1,31 @@
+name: Feature Request
+description: Suggest a new contract function or improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed function signature
+      placeholder: |
+        pub fn is_overdue(env: Env, invoice_id: String) -> bool
+    validations:
+      required: true
+
+  - type: textarea
+    id: auth
+    attributes:
+      label: Auth requirements
+      description: Who can call this function? Does it require_auth()?
+
+  - type: textarea
+    id: security
+    attributes:
+      label: Security considerations
+      description: Any trust boundaries, state mutation risks, or edge cases?
