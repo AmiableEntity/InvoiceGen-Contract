@@ -174,7 +174,7 @@ impl InvoiceContract {
             .storage()
             .persistent()
             .get(&key)
-            .expect("Invoice not found");
+            .unwrap_or_else(|| panic!("Invoice not found: {}", invoice_id));
 
         // Validate current status
         match invoice.status {
@@ -213,7 +213,7 @@ impl InvoiceContract {
             .storage()
             .persistent()
             .get(&key)
-            .expect("Invoice not found");
+            .unwrap_or_else(|| panic!("Invoice not found: {}", invoice_id));
 
         // Only the freelancer can cancel
         invoice.freelancer.require_auth();
@@ -240,11 +240,11 @@ impl InvoiceContract {
     /// # Panics
     /// - If invoice not found
     pub fn get_invoice(env: Env, invoice_id: String) -> Invoice {
-        let key = DataKey::Invoice(invoice_id);
+        let key = DataKey::Invoice(invoice_id.clone());
         env.storage()
             .persistent()
             .get(&key)
-            .expect("Invoice not found")
+            .unwrap_or_else(|| panic!("Invoice not found: {}", invoice_id))
     }
 
     /// Check if an invoice exists.
@@ -308,7 +308,7 @@ impl InvoiceContract {
             .storage()
             .persistent()
             .get(&key)
-            .expect("Invoice not found");
+            .unwrap_or_else(|| panic!("Invoice not found: {}", invoice_id));
         invoice.payment_tx_hash
     }
 }
