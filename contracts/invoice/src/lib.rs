@@ -265,6 +265,23 @@ impl InvoiceContract {
         }
     }
 
+    /// Get just the status of an invoice without fetching the full struct.
+    ///
+    /// # Arguments
+    /// * `invoice_id` - The invoice to query
+    ///
+    /// # Panics
+    /// - If invoice not found
+    pub fn get_invoice_status(env: Env, invoice_id: String) -> InvoiceStatus {
+        let key = DataKey::Invoice(invoice_id.clone());
+        let invoice: Invoice = env
+            .storage()
+            .persistent()
+            .get(&key)
+            .unwrap_or_else(|| panic!("Invoice not found: {}", invoice_id));
+        invoice.status
+    }
+
     /// Get the payment transaction hash for a paid invoice.
     /// Returns None if not paid yet.
     pub fn get_payment_tx(env: Env, invoice_id: String) -> Option<Bytes> {
