@@ -265,6 +265,24 @@ impl InvoiceContract {
         }
     }
 
+    /// Check if a pending invoice is overdue.
+    /// Returns true if the invoice is still Pending and the due date has passed.
+    ///
+    /// # Arguments
+    /// * `invoice_id` - The invoice to check
+    ///
+    /// # Panics
+    /// - If invoice not found
+    pub fn is_overdue(env: Env, invoice_id: String) -> bool {
+        let key = DataKey::Invoice(invoice_id.clone());
+        let invoice: Invoice = env
+            .storage()
+            .persistent()
+            .get(&key)
+            .unwrap_or_else(|| panic!("Invoice not found: {}", invoice_id));
+        invoice.status == InvoiceStatus::Pending && env.ledger().timestamp() > invoice.due_date
+    }
+
     /// Get just the status of an invoice without fetching the full struct.
     ///
     /// # Arguments
